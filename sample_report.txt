@@ -1,0 +1,11 @@
+BUPA HEALTH REPORT (sample — for the upload demo)
+
+Patient summary
+Age: 52
+Height: 178
+Weight: 91
+Blood type: O+
+
+Family history: father diagnosed with type 2 diabetes at 58.
+Lifestyle: former smoker, occasional alcohol, exercises 1-2 days per week.
+Notes: no current medications.

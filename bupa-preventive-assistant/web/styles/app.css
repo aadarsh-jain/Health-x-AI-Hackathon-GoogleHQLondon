@@ -1,0 +1,304 @@
+/* Modern component + layout styles. Consumes tokens.css. Accessibility-first (§18):
+   type scale, contrast, tap targets and Senior Mode all driven by tokens. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-body);
+  line-height: var(--lh-body);
+  color: var(--color-text);
+  background: var(--page-grad) fixed;
+  background-color: var(--color-bg);
+  text-align: left;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 { font-size: var(--fs-h1); line-height: var(--lh-head); letter-spacing: -0.02em; }
+h2 { font-size: var(--fs-h2); line-height: var(--lh-head); letter-spacing: -0.01em; }
+h3 { font-size: var(--fs-h3); line-height: var(--lh-head); }
+p + p { margin-top: var(--space-para); }
+
+:focus-visible { outline: var(--focus-ring); outline-offset: 2px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .msg, .reco-card, .notif { animation: rise .28s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+.app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* ============ header — gradient banner ============ */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  background: var(--header-grad);
+  color: var(--color-text);
+  padding: 20px 22px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+}
+.topbar h1 { margin: 0; font-size: var(--fs-h2); color: var(--color-text); }
+.topbar > div { display: flex; gap: 10px; flex-wrap: wrap; }
+/* header buttons: clean white pills on the light banner */
+.topbar .btn, .topbar button {
+  background: #fff; color: var(--color-brand);
+  border: 2px solid var(--color-border-strong); text-decoration: none;
+}
+.topbar .btn:hover, .topbar button:hover { border-color: var(--color-brand); }
+.topbar button[aria-pressed="true"],
+.topbar button[aria-pressed="true"]:hover {
+  background: var(--color-brand); color: #fff; border-color: var(--color-brand);
+}
+
+/* ============ buttons ============ */
+button, .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: inherit; font-size: var(--fs-body); font-weight: var(--fw-emph);
+  min-height: var(--tap-min); min-width: var(--tap-min);
+  padding: 10px 20px; border-radius: var(--radius-pill);
+  border: 2px solid transparent; background: var(--brand-grad);
+  color: var(--color-brand-ink); cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
+  text-decoration: none;
+}
+button:hover, .btn:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+button:active, .btn:active { transform: translateY(0); }
+button.secondary, .btn.secondary {
+  background: var(--color-surface); color: var(--color-text);
+  border-color: var(--color-border-strong); box-shadow: none;
+}
+button.secondary:hover, .btn.secondary:hover { border-color: var(--color-brand); color: var(--color-brand); }
+
+/* ============ generic panels ============ */
+section { margin: 18px 0; }
+section > h2 { margin: 0 0 12px; }
+
+/* demo user picker */
+.field > select#userSelect { max-width: 420px; }
+
+/* ============ impact counter strip (§16) — stat cards ============ */
+.impact {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  padding: 0; margin: 4px 0 22px; background: none; border: 0;
+}
+.impact .stat {
+  display: flex; flex-direction: column; gap: 2px;
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow-sm);
+  font-weight: var(--fw-body); font-size: var(--fs-caption); color: var(--color-muted);
+}
+.impact .stat b {
+  font-size: 1.55rem; line-height: 1.1; font-weight: var(--fw-head);
+  color: var(--color-brand);
+}
+
+/* ============ chat ============ */
+.messages { display: flex; flex-direction: column; gap: 14px; padding: 6px 0; }
+.msg {
+  max-width: 80%; padding: 12px 16px; border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm); position: relative;
+}
+.msg.user {
+  align-self: flex-end; background: var(--brand-grad); color: var(--color-brand-ink);
+  border-bottom-right-radius: 6px;
+}
+.msg.bot {
+  align-self: flex-start; background: var(--color-surface);
+  border: 1px solid var(--color-border); border-bottom-left-radius: 6px;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+.msg.bot .msg-text { flex: 1; }
+
+/* ============ per-item speaker (listen) button ============ */
+.speaker {
+  min-width: 36px; min-height: 36px; width: 36px; height: 36px;
+  padding: 0; border-radius: 50%; flex: 0 0 auto;
+  background: var(--color-surface); color: var(--color-brand);
+  border: 1.5px solid var(--color-border-strong); box-shadow: none;
+  font-size: 0.95rem; line-height: 1;
+}
+.speaker:hover {
+  border-color: var(--color-brand); transform: none; box-shadow: none;
+  background: color-mix(in srgb, var(--color-brand) 8%, var(--color-surface));
+}
+/* speaker anchored to a card's top-right (recommendations, reminders) */
+.speaker-card { position: absolute; top: 12px; right: 12px; }
+html.senior .speaker { min-width: 44px; min-height: 44px; width: 44px; height: 44px; }
+
+/* quick replies (the IP buttons) — pills */
+.quick-replies { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+.quick-replies button {
+  background: var(--color-surface); color: var(--color-brand);
+  border: 2px solid var(--color-border-strong); box-shadow: none; font-weight: var(--fw-emph);
+}
+.quick-replies button:hover { border-color: var(--color-brand); background: color-mix(in srgb, var(--color-brand) 8%, var(--color-surface)); }
+
+/* chat input row */
+#chatForm { display: flex; gap: 10px; margin-top: 14px; align-items: center; }
+
+/* mic (voice input) button */
+.mic {
+  width: 48px; min-width: 48px; min-height: var(--tap-min); padding: 0;
+  border-radius: 50%; flex: 0 0 auto; font-size: 1.15rem;
+  background: var(--color-surface); color: var(--color-brand);
+  border: 2px solid var(--color-border-strong); box-shadow: none;
+}
+.mic:hover { border-color: var(--color-brand); transform: none; box-shadow: none;
+  background: color-mix(in srgb, var(--color-brand) 8%, var(--color-surface)); }
+.mic.listening {
+  background: #D6215B; color: #fff; border-color: #D6215B;
+  animation: micpulse 1.1s ease-in-out infinite;
+}
+@keyframes micpulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(214, 33, 91, .45); }
+  50%      { box-shadow: 0 0 0 9px rgba(214, 33, 91, 0); }
+}
+/* inline mic beside a survey text field */
+.input-mic { display: flex; gap: 8px; align-items: center; }
+.field .input-mic input { flex: 1 1 auto; width: auto; min-width: 0; }
+.mic-inline { width: 44px; min-width: 44px; height: 44px; min-height: 44px; font-size: 1rem; }
+#chatInput {
+  flex: 1; min-height: var(--tap-min); padding: 12px 16px;
+  border-radius: var(--radius-pill); border: 2px solid var(--color-border-strong);
+  background: var(--color-surface); color: var(--color-text);
+  font-family: inherit; font-size: var(--fs-body); box-shadow: var(--shadow-sm);
+}
+#chatInput:focus { outline: none; border-color: var(--color-brand); box-shadow: var(--ring-brand); }
+
+/* ============ recommendation card — all four transparency fields (§5.2) ============ */
+.reco-card {
+  position: relative; overflow: hidden;
+  border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  background: var(--color-surface); padding: 18px 56px 18px 22px; margin: 14px 0;
+  box-shadow: var(--shadow-md);
+}
+.reco-card::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+  background: var(--brand-grad);
+}
+.reco-card h3 { margin: 0 0 8px; color: var(--color-text); }
+.reco-card .reason { margin: 0 0 12px; }
+.reco-card .trigger {
+  font-size: var(--fs-caption); color: var(--color-muted);
+  background: color-mix(in srgb, var(--color-brand) 6%, var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius); padding: 10px 12px; margin: 10px 0;
+  overflow-x: auto;
+}
+.reco-card .trigger code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; }
+.reco-card .next-step { font-weight: var(--fw-emph); color: var(--color-brand); margin: 6px 0 0; }
+/* actionable next-step (a <button>): solid pill CTA */
+.reco-card button.next-step {
+  background: var(--brand-grad); color: var(--color-brand-ink);
+  border: 0; padding: 10px 18px; margin-top: 6px; box-shadow: var(--shadow-sm);
+}
+.reco-card button.next-step:disabled {
+  background: var(--color-ok-bg); color: var(--color-ok);
+  cursor: default; transform: none; box-shadow: none;
+}
+
+/* ============ notifications — icon + label, never colour alone (1.4.1) ============ */
+#notifs { display: flex; flex-direction: column; gap: 10px; }
+.notif {
+  position: relative;
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 52px 14px 16px; border-radius: var(--radius);
+  background: var(--color-warn-bg); color: var(--color-warn-ink);
+  border: 1px solid var(--color-warn-ink); box-shadow: var(--shadow-sm);
+}
+.notif .speaker { color: var(--color-warn-ink); border-color: var(--color-warn-ink); }
+.notif .icon {
+  font-size: 1.1em; flex: 0 0 auto;
+  width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--color-warn-ink) 16%, transparent);
+  border-radius: 50%;
+}
+.badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 26px; height: 26px; padding: 0 8px; border-radius: var(--radius-pill);
+  background: var(--color-warn-ink); color: #fff; margin-left: 8px;
+  font-size: var(--fs-caption); font-weight: var(--fw-head); vertical-align: middle;
+}
+
+/* ============ survey form ============ */
+fieldset {
+  border: 1px solid var(--color-border); border-radius: var(--radius-lg);
+  padding: 8px 20px 20px; margin: 20px 0; background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+fieldset > legend { padding: 0 8px; }
+fieldset > legend h2 { margin: 10px 0; font-size: var(--fs-h3); }
+.subfieldset { margin: 16px 0; box-shadow: none; background: transparent; }
+.subfieldset > legend { font-weight: var(--fw-emph); }
+
+.field { margin: 16px 0; }
+.field label { display: block; font-weight: var(--fw-emph); margin-bottom: 6px; }
+.field input, .field select {
+  font-family: inherit; font-size: var(--fs-body);
+  width: 100%; min-height: var(--tap-min);
+  padding: 11px 14px; border-radius: var(--radius);
+  border: 2px solid var(--color-border-strong); background: var(--color-surface);
+  color: var(--color-text); transition: border-color .12s ease, box-shadow .12s ease;
+}
+.field input:focus, .field select:focus {
+  outline: none; border-color: var(--color-brand); box-shadow: var(--ring-brand);
+}
+.field .hint { font-size: var(--fs-caption); color: var(--color-muted); margin-top: 4px; }
+.required::after { content: " *"; color: var(--color-warn-ink); }
+.prefilled-tag {
+  display: inline-block; font-size: var(--fs-caption); font-weight: var(--fw-emph);
+  color: var(--color-ok); background: var(--color-ok-bg);
+  padding: 2px 10px; border-radius: var(--radius-pill); margin-left: 8px;
+}
+
+/* checkbox / radio lists — generous, tappable rows (§18.6) */
+.check-list { display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+.check-list label {
+  display: flex; align-items: flex-start; gap: 12px;
+  min-height: var(--tap-min); padding: 8px 12px; border-radius: var(--radius);
+  font-weight: var(--fw-body); cursor: pointer; border: 1px solid transparent;
+}
+.check-list label:hover { background: color-mix(in srgb, var(--color-brand) 6%, var(--color-surface)); }
+.check-list input[type="checkbox"],
+.check-list input[type="radio"] { width: 22px; height: 22px; margin-top: 2px; flex: 0 0 auto; accent-color: var(--color-brand); }
+
+/* input-method choice row — segmented pills */
+.choice-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* medication rows */
+.med-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.med-row input {
+  flex: 1 1 140px; min-height: var(--tap-min);
+  font-family: inherit; font-size: var(--fs-body);
+  padding: 9px 12px; border-radius: var(--radius);
+  border: 2px solid var(--color-border-strong); background: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* range / severity slider */
+input[type="range"] { width: 100%; min-height: var(--tap-min); accent-color: var(--color-brand); }
+#severityOut { font-weight: var(--fw-head); color: var(--color-brand); }
+
+/* survey result panel */
+#result {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-md);
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}

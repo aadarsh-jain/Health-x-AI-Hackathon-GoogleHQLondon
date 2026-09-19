@@ -1,0 +1,68 @@
+/* =====================================================================
+   Accessibility design tokens (spec §18) — Adult baseline.
+   Senior tier lives in senior-mode.css and flips these via html.senior.
+   Font: Atkinson Hyperlegible (LOCKED, §18.1). Self-hosted — drop the .woff2
+   files into web/styles/fonts/ and they load with no third-party request.
+   ===================================================================== */
+
+/* One common font for BOTH modes: Inter (self-hosted variable font, latin).
+   A single file covers the whole 100–900 weight axis, so weights stay perfectly
+   consistent between Normal and Senior mode — only the size changes. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;      /* variable axis */
+  font-display: swap;
+  src: url("./fonts/Inter.woff2") format("woff2");
+}
+
+:root {
+  /* type */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-body: 1rem;          /* 16px */
+  --fs-caption: 0.875rem;   /* 14px */
+  --fs-h3: 1.25rem;         /* 20px */
+  --fs-h2: 1.375rem;        /* 22px */
+  --fs-h1: 1.75rem;         /* 28px */
+  --fw-body: 400;
+  --fw-emph: 600;
+  --fw-head: 700;
+  --lh-body: 1.5;
+  --lh-head: 1.25;
+  --space-para: 2em;
+
+  /* interaction */
+  --tap-min: 44px;
+  --focus-ring: 2px solid #3466CE;
+
+  /* colour — LIGHT BLUE theme. Dark navy text on light blue keeps AAA contrast
+     (dark-on-tint ~12:1); white cards lift off the blue page. */
+  --color-text: #10243E;       /* dark navy, ~14:1 on white */
+  --color-muted: #4A5A6E;      /* still >= 7:1 on white */
+  --color-bg: #FFFFFF;         /* clean white page */
+  --color-surface: #FFFFFF;    /* white cards/inputs (separated by border + shadow) */
+  --color-border: #C7D6E8;     /* soft blue-grey hairline for card edges */
+  --color-border-strong: #7C93AC; /* >= 3:1 on white — for form controls/buttons (1.4.11) */
+  --color-brand: #3466CE;      /* calmer, desaturated blue for buttons/CTAs */
+  --color-brand-ink: #FFFFFF;
+  --color-ok: #1B7A3D;
+  --color-ok-bg: #EAF6EE;
+  --color-warn-bg: #FFF6EC;
+  --color-warn-ink: #9A5A12;   /* icon+label pair, never colour alone */
+  --color-brand-2: #6C97DE;    /* soft blue accent for gradients (no bright cyan) */
+  --radius: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  /* modern depth + gradients — soft & light, easy on the eyes */
+  --page-grad: #FFFFFF;        /* clean white page background */
+  --header-grad: linear-gradient(135deg, #EAF3FE 0%, #DCEBFB 55%, #CFE3FB 100%); /* light airy blue, navy text */
+  --brand-grad: linear-gradient(135deg, #2F5EC4 0%, #4074D6 100%); /* calm royal blue, white text safe */
+  --shadow-sm: 0 1px 2px rgba(16,36,62,.05), 0 1px 3px rgba(16,36,62,.07);
+  --shadow-md: 0 4px 14px rgba(16,36,62,.08);
+  --shadow-lg: 0 14px 34px rgba(16,36,62,.12);
+  --ring-brand: 0 0 0 4px rgba(52,102,206,.16);
+}
+
+/* Light theme only: the app deliberately stays on a clean white background and
+   does not switch to a dark palette with the OS setting. */

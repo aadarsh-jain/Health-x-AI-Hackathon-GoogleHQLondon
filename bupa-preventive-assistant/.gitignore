@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.env
+.venv/
+venv/
+*.log
+.firebase/
+node_modules/
+# NB: DO commit web/styles/fonts/*.woff2 (Atkinson Hyperlegible, OFL) — they are
+# self-hosted and must ship with the front end (spec §18.1).

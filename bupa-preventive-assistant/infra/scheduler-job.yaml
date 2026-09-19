@@ -1,0 +1,20 @@
+# Cloud Scheduler job (spec §5 Trigger/Action, §9 /internal/trigger-check).
+# Create it with infra/deploy.sh (the gcloud command is included there).
+# This YAML documents the intended job config.
+
+name: bupa-daily-trigger-check
+description: >
+  Daily preventive check — assessment cadence, checkup gaps, mental-health
+  check-ins and policy renewals. Writes to notifications, fans out to Pub/Sub.
+schedule: "0 8 * * *"          # 08:00 every day
+timeZone: "Europe/London"
+httpTarget:
+  uri: "https://REPLACE_WITH_CLOUD_RUN_URL/internal/trigger-check"
+  httpMethod: POST
+  headers:
+    Content-Type: application/json
+  # For a pilot, protect this endpoint with OIDC (spec §17) — set the invoker SA:
+  # oidcToken:
+  #   serviceAccountEmail: "scheduler-invoker@PROJECT.iam.gserviceaccount.com"
+retryConfig:
+  retryCount: 3

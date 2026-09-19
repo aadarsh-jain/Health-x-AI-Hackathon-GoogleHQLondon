@@ -1,0 +1,50 @@
+/* =====================================================================
+   Senior tier (spec §18) — one class swap on <html class="senior">.
+   Scales type, leading and tap targets up; contrast already exceeds 7:1 (AAA).
+   ===================================================================== */
+
+html.senior {
+  /* Font size stays identical to Normal mode (no zoom) — same typeface AND
+     same size in both modes. Senior mode only changes touch targets, spacing
+     and decoration, never the text size. */
+  --tap-min: 52px;
+  --space-para: 2.25em;
+
+  /* Minimalist tier: flat surfaces (no shadows), solid colours (no gradients),
+     calmer radii — less decoration, more clarity for older eyes. */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --header-grad: #EDF4FE;                 /* flat, quiet header */
+  --brand-grad: var(--color-brand);       /* solid, no gradient */
+  --radius: 10px;
+  --radius-lg: 12px;
+}
+
+/* In Senior Mode, make choice controls full-width, easy-to-hit rows. */
+html.senior .quick-replies button,
+html.senior .choice-row {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+/* No motion/hover flourishes — keep it steady and calm. */
+html.senior button:hover, html.senior .btn:hover,
+html.senior .quick-replies button:hover { transform: none; }
+html.senior .msg, html.senior .reco-card, html.senior .notif { animation: none; }
+
+/* Flatten cards to a single clean hairline; slimmer accent bar. */
+html.senior .topbar { border: 1px solid var(--color-border); }
+html.senior .impact .stat,
+html.senior .reco-card,
+html.senior .notif,
+html.senior fieldset { box-shadow: none; }
+html.senior .reco-card::before { width: 4px; }
+
+/* De-emphasise the technical "why / trigger data" panel: plain muted text,
+   no tinted box — the plain-language reason already explains why. */
+html.senior .reco-card .trigger {
+  background: none; border: 0; padding: 4px 0;
+  color: var(--color-muted);
+}

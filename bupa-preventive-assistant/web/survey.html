@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pre-survey — Bupa Preventive Health Assistant</title>
+  <link rel="stylesheet" href="styles/tokens.css?v=13" />
+  <link rel="stylesheet" href="styles/senior-mode.css?v=13" />
+  <link rel="stylesheet" href="styles/app.css?v=13" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <h1>Your health check-in</h1>
+    </header>
+
+    <!-- 4.5 input-method choice -->
+    <section aria-labelledby="methodH">
+      <h2 id="methodH">How would you like to provide your information?</h2>
+      <div class="choice-row" style="display:flex; gap:8px; flex-wrap:wrap;">
+        <label class="btn secondary">
+          <input type="radio" name="method" value="upload" class="sr-only" checked />
+          Upload a report (we'll fill the form for you)
+        </label>
+        <label class="btn secondary">
+          <input type="radio" name="method" value="bupa_records" class="sr-only" />
+          Select from your Bupa records
+        </label>
+        <label class="btn secondary">
+          <input type="radio" name="method" value="manual" class="sr-only" />
+          Fill in manually
+        </label>
+      </div>
+
+      <div class="field" id="uploadArea">
+        <label for="reportFile">Upload a report (PDF, image, or .txt)</label>
+        <input type="file" id="reportFile" accept=".pdf,.png,.jpg,.jpeg,.txt" />
+        <p class="hint" id="uploadStatus">MedGemma will read it and pre-fill the form below — you can review and edit every field before submitting.</p>
+      </div>
+
+      <div class="field" id="recordsArea" style="display:none;">
+        <button type="button" id="pullRecords" class="secondary">Pull from my Bupa records</button>
+        <p class="hint" id="recordsStatus">We'll pre-fill the form from your most recent Bupa records — you can review and edit every field before submitting.</p>
+      </div>
+    </section>
+
+    <p class="hint">Only <strong>Section 1</strong> is required. Everything else is optional — the more you share, the more personalised your preventive recommendations.</p>
+
+    <form id="surveyForm">
+      <!-- ============ SECTION 1 — Basic information (MANDATORY) ============ -->
+      <fieldset>
+        <legend><h2 id="s1H">Section 1 — Basic information</h2></legend>
+
+        <div class="field">
+          <label class="required" for="age">Age</label>
+          <input id="age" name="age" type="number" inputmode="numeric" min="0" max="120" required />
+          <span class="prefilled-tag" data-for="age" hidden>from your report</span>
+        </div>
+        <div class="field">
+          <label class="required" for="height">Height (cm)</label>
+          <input id="height" name="height_cm" type="number" inputmode="numeric" min="50" max="250" required />
+          <span class="prefilled-tag" data-for="height" hidden>from your report</span>
+        </div>
+        <div class="field">
+          <label class="required" for="weight">Weight (kg)</label>
+          <input id="weight" name="weight_kg" type="number" inputmode="numeric" min="20" max="400" required />
+          <span class="prefilled-tag" data-for="weight" hidden>from your report</span>
+        </div>
+        <div class="field">
+          <label class="required" for="blood">Blood type</label>
+          <select id="blood" name="blood_type" required>
+            <option value="">Select…</option>
+            <option>O+</option><option>O-</option><option>A+</option><option>A-</option>
+            <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+          </select>
+          <span class="prefilled-tag" data-for="blood" hidden>from your report</span>
+        </div>
+        <div class="field">
+          <label for="ethnicity">Ethnic group <span class="hint">(optional — helps tailor screenings)</span></label>
+          <select id="ethnicity" name="ethnicity">
+            <option value="">Prefer not to say</option>
+            <option value="white">White</option>
+            <option value="black">Black / African / Caribbean</option>
+            <option value="asian">Asian</option>
+            <option value="mixed">Mixed / Multiple</option>
+            <option value="other">Other</option>
+          </select>
+          <span class="prefilled-tag" data-for="ethnicity" hidden>from your report</span>
+        </div>
+      </fieldset>
+
+      <!-- ============ SECTION 2 — Family medical history (optional) ============ -->
+      <fieldset>
+        <legend><h2>Section 2 — Family medical history <span class="hint">(optional)</span></h2></legend>
+        <p class="hint" id="famH">Select any that apply to biological relatives (parents, siblings, children).</p>
+        <div class="check-list" role="group" aria-labelledby="famH">
+          <label><input type="checkbox" name="famhist" value="heart_disease" /> Heart disease / heart attack (esp. before 55)</label>
+          <label><input type="checkbox" name="famhist" value="high_blood_pressure" /> High blood pressure</label>
+          <label><input type="checkbox" name="famhist" value="high_cholesterol" /> High cholesterol</label>
+          <label><input type="checkbox" name="famhist" value="stroke" /> Stroke</label>
+          <label><input type="checkbox" name="famhist" value="type2_diabetes" /> Type 2 diabetes</label>
+          <label><input type="checkbox" name="famhist" value="type1_diabetes" /> Type 1 diabetes</label>
+          <label><input type="checkbox" name="famhist" value="cancer" /> Cancer</label>
+          <label><input type="checkbox" name="famhist" value="kidney_disease" /> Kidney disease</label>
+          <label><input type="checkbox" name="famhist" value="mental_health" /> Mental health conditions</label>
+          <label><input type="checkbox" name="famhist" value="asthma_copd" /> Asthma / COPD</label>
+          <label><input type="checkbox" name="famhist" value="genetic_disorder" /> Genetic disorders (sickle cell, thalassemia, cystic fibrosis)</label>
+          <label><input type="checkbox" name="famhist" value="dementia" /> Dementia / Alzheimer's</label>
+          <label><input type="checkbox" name="famhist" value="none" /> None</label>
+          <label><input type="checkbox" name="famhist" value="unknown" /> Unknown / adopted</label>
+        </div>
+        <div class="field" id="cancerDetailField" hidden>
+          <label for="cancerDetail">Cancer — type and relative</label>
+          <input id="cancerDetail" type="text" placeholder="e.g. breast cancer, mother" />
+        </div>
+        <div class="field">
+          <label for="famNotes">Notes — other major family conditions</label>
+          <input id="famNotes" type="text" placeholder="Optional" />
+          <span class="prefilled-tag" data-for="family" hidden>from your report</span>
+        </div>
+      </fieldset>
+
+      <!-- ============ SECTION 3 — Lifestyle & daily habits (optional) ============ -->
+      <fieldset>
+        <legend><h2>Section 3 — Lifestyle &amp; daily habits <span class="hint">(optional)</span></h2></legend>
+
+        <div class="field">
+          <label for="activity">Days per week of moderate–vigorous activity</label>
+          <select id="activity" name="activity_days">
+            <option value="">Select…</option>
+            <option value="0">0 days</option><option value="1-2">1–2 days</option>
+            <option value="3-4">3–4 days</option><option value="5+">5+ days</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="activityMin">Minutes on those active days</label>
+          <select id="activityMin" name="activity_minutes">
+            <option value="">Select…</option>
+            <option value="<15">Under 15</option><option value="15-30">15–30</option>
+            <option value="30-60">30–60</option><option value=">60">Over 60</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="diet">Overall diet</label>
+          <select id="diet" name="diet">
+            <option value="">Select…</option>
+            <option value="excellent">Excellent</option><option value="good">Good</option>
+            <option value="fair">Fair</option><option value="poor">Poor</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="fruitveg">Fruit / veg servings per day</label>
+          <select id="fruitveg" name="fruit_veg">
+            <option value="">Select…</option>
+            <option value="0">0</option><option value="1-2">1–2</option>
+            <option value="3-4">3–4</option><option value="5+">5+</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="water">Glasses of water per day (≈250 ml each)</label>
+          <input id="water" name="water_glasses" type="number" inputmode="numeric" min="0" max="30" />
+        </div>
+        <fieldset class="subfieldset">
+          <legend>Dietary pattern (select all that apply)</legend>
+          <div class="check-list">
+            <label><input type="checkbox" name="dietpat" value="none" /> None</label>
+            <label><input type="checkbox" name="dietpat" value="vegetarian" /> Vegetarian</label>
+            <label><input type="checkbox" name="dietpat" value="vegan" /> Vegan</label>
+            <label><input type="checkbox" name="dietpat" value="pescatarian" /> Pescatarian</label>
+            <label><input type="checkbox" name="dietpat" value="halal" /> Halal</label>
+            <label><input type="checkbox" name="dietpat" value="kosher" /> Kosher</label>
+            <label><input type="checkbox" name="dietpat" value="low_carb_keto" /> Low-carb / keto</label>
+            <label><input type="checkbox" name="dietpat" value="intermittent_fasting" /> Intermittent fasting</label>
+            <label><input type="checkbox" name="dietpat" value="medically_prescribed" /> Medically prescribed</label>
+            <label><input type="checkbox" name="dietpat" value="other" /> Other</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="sleep">Sleep per night</label>
+          <select id="sleep" name="sleep_hours">
+            <option value="">Select…</option>
+            <option value="<5">Under 5 hours</option><option value="5-6">5–6 hours</option>
+            <option value="7-8">7–8 hours</option><option value="9+">9+ hours</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="stress">Stress level (past month)</label>
+          <select id="stress" name="stress">
+            <option value="">Select…</option>
+            <option value="low">Low</option><option value="moderate">Moderate</option>
+            <option value="high">High</option><option value="severe">Severe</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="tobacco">Tobacco / nicotine</label>
+          <select id="tobacco" name="tobacco">
+            <option value="">Select…</option>
+            <option value="daily">Yes, daily</option><option value="occasionally">Yes, occasionally</option>
+            <option value="former">Former (quit)</option><option value="never">Never</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="alcohol">Alcohol</label>
+          <select id="alcohol" name="alcohol">
+            <option value="">Select…</option>
+            <option value="never">Never</option><option value="monthly_or_less">Monthly or less</option>
+            <option value="2-4_month">2–4 times / month</option>
+            <option value="2-3_week">2–3 times / week</option>
+            <option value="4+_week">4+ times / week</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <!-- ============ SECTION 4 — Medications & allergies (optional) ============ -->
+      <fieldset>
+        <legend><h2>Section 4 — Current medications &amp; allergies <span class="hint">(optional)</span></h2></legend>
+        <p class="hint" id="allergyH">Allergies (select all that apply)</p>
+        <div class="check-list" role="group" aria-labelledby="allergyH">
+          <label><input type="checkbox" name="allergy" value="medication" /> Medication</label>
+          <label><input type="checkbox" name="allergy" value="food" /> Food</label>
+          <label><input type="checkbox" name="allergy" value="environmental" /> Environmental</label>
+          <label><input type="checkbox" name="allergy" value="none_known" /> No known allergies</label>
+          <label><input type="checkbox" name="allergy" value="not_sure" /> Not sure</label>
+        </div>
+        <div class="field">
+          <label for="allergyDetails">Allergy details (what + reaction)</label>
+          <input id="allergyDetails" type="text" placeholder="e.g. penicillin — rash" />
+        </div>
+
+        <fieldset class="subfieldset">
+          <legend>Are you taking any medications or supplements?</legend>
+          <div class="choice-row" style="display:flex; gap:8px; flex-wrap:wrap;">
+            <label class="btn secondary"><input type="radio" name="takesMeds" value="no" class="sr-only" checked /> No</label>
+            <label class="btn secondary"><input type="radio" name="takesMeds" value="yes" class="sr-only" /> Yes</label>
+          </div>
+        </fieldset>
+        <div id="medsArea" hidden>
+          <div id="medsRows"></div>
+          <button type="button" id="addMed" class="secondary">+ Add medication</button>
+        </div>
+      </fieldset>
+
+      <!-- ============ SECTION 5 — Symptoms & chief complaint (optional) ============ -->
+      <fieldset>
+        <legend><h2>Section 5 — Current symptoms &amp; chief complaint <span class="hint">(optional)</span></h2></legend>
+        <p class="hint">If you're experiencing a symptom, we'll point you to a Digital GP consultation — never a diagnosis.</p>
+        <div class="field">
+          <label for="chief">Primary concern / chief complaint</label>
+          <input id="chief" name="chief_complaint" type="text" placeholder="Optional" />
+        </div>
+        <div class="field">
+          <label for="onset">Onset</label>
+          <select id="onset" name="onset">
+            <option value="">Select…</option>
+            <option value="<24h">Under 24 hours</option><option value="few_days">A few days</option>
+            <option value="1-2_weeks">1–2 weeks</option><option value="1-6_months">1–6 months</option>
+            <option value=">6_months">Over 6 months</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="timing">Timing</label>
+          <select id="timing" name="timing">
+            <option value="">Select…</option>
+            <option value="constant">Constant</option><option value="intermittent">Intermittent</option>
+            <option value="progressive">Progressive</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="severity">Severity: <output id="severityOut">0</output> / 10</label>
+          <input id="severity" name="severity" type="range" min="0" max="10" step="1" value="0" />
+        </div>
+        <div class="field">
+          <label for="better">What makes it better?</label>
+          <input id="better" type="text" placeholder="Optional" />
+        </div>
+        <div class="field">
+          <label for="worse">What makes it worse?</label>
+          <input id="worse" type="text" placeholder="Optional" />
+        </div>
+      </fieldset>
+
+      <button type="submit">Submit check-in</button>
+    </form>
+
+    <section id="result" hidden aria-live="polite" style="margin-top:16px;">
+      <h2>Your overview</h2>
+      <div id="resultText"></div>
+      <div id="resultCards"></div>
+      <a class="btn" href="index.html">Go to assistant</a>
+    </section>
+  </main>
+
+  <script src="config.js?v=13"></script>
+  <script src="mock.js?v=13"></script>
+  <script src="voice.js?v=13"></script>
+  <script src="upload.js?v=13"></script>
+</body>
+</html>

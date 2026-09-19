@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bupa Preventive Health Assistant</title>
+  <link rel="stylesheet" href="styles/tokens.css?v=13" />
+  <link rel="stylesheet" href="styles/senior-mode.css?v=13" />
+  <link rel="stylesheet" href="styles/app.css?v=13" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <h1>Your preventive health assistant</h1>
+      <div>
+        <a class="btn secondary" href="survey.html">New check-in</a>
+      </div>
+    </header>
+
+    <!-- demo user picker -->
+    <div class="field">
+      <label for="userSelect">Demo user</label>
+      <select id="userSelect" aria-label="Choose a demo user"></select>
+    </div>
+
+    <!-- live impact counters (§16) -->
+    <section class="impact" id="impact" aria-live="polite">
+      <span class="stat"><b id="gaps">0</b> gaps identified</span>
+      <span class="stat"><b id="recos">0</b> users with recommendations</span>
+      <span class="stat"><b id="actioned">0</b> actioned</span>
+    </section>
+
+    <!-- notifications -->
+    <section aria-labelledby="notifH">
+      <h2 id="notifH">Reminders <span class="badge" id="notifBadge">0</span></h2>
+      <div id="notifs"></div>
+    </section>
+
+    <!-- chat -->
+    <section aria-labelledby="chatH">
+      <h2 id="chatH" class="sr-only">Chat</h2>
+      <div class="messages" id="messages" aria-live="polite"></div>
+
+      <div class="quick-replies" id="quickReplies">
+        <button data-msg="How is my health?">How is my health?</button>
+        <button data-msg="What should I do first?">What should I do first?</button>
+        <button data-msg="What are my policies?">My policies</button>
+        <button data-msg="Show my claims">My claims</button>
+      </div>
+
+      <form id="chatForm">
+        <label class="sr-only" for="chatInput">Type a message</label>
+        <input id="chatInput" placeholder="Ask about your health or cover…" autocomplete="off" />
+        <button type="button" id="micBtn" class="mic" aria-label="Speak your message" aria-pressed="false" title="Speak your message">🎤</button>
+        <button type="submit">Send</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="config.js?v=13"></script>
+  <script src="mock.js?v=13"></script>
+  <script src="voice.js?v=13"></script>
+  <script src="chat.js?v=13"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+resource.type="aiplatform.googleapis.com/Endpoint" resource.labels.endpoint_id="9112415920449388544" resource.labels.location="europe-west4"
+
