@@ -50,8 +50,17 @@ api/            FastAPI service (Cloud Run)
   mechanisms/     prompt · genai · guardrail · recommender · trigger_action
   db/             schema.sql + seed.sql (5 demo users + services catalog)
 prompts/        the 6 versioned prompts (incl. guardrail_rules.md)
-web/            Firebase Hosting front end (accessible, §18; Senior Mode)
+web/            Firebase Hosting front end
+  index.html      assistant (chat, impact counters, reminders)
+  survey.html     full Appendix-A survey + report upload / records pre-fill
+  chat.js         chat, recommendation cards, mic (speech-to-text) input
+  upload.js       survey submit, report/records pre-fill, field mics
+  voice.js        read-aloud (speech synthesis) for the 🔊 buttons
+  mock.js         offline UI mode (serves data in-browser, no backend)
+  config.example.js   copy -> config.js (git-ignored)
+  styles/         tokens.css + senior-mode.css + app.css + self-hosted font
 infra/          scheduler-job.yaml + deploy.sh
+.env.example    copy -> .env (git-ignored) — all API env vars
 ```
 
 ---
@@ -73,6 +82,23 @@ Ignored by git: `.env`, `web/config.js`, `*.db` (local SQLite), and any GCP key
 (`*-key.json`, `credentials.json`, `*.pem`). Committed: the `*.example` templates.
 
 ## Quick start
+
+### Zero-setup local run (SQLite, no Postgres, no cloud)
+Fastest way to see it working — deterministic fallback + a local SQLite DB:
+```bash
+cd api
+pip install -r requirements.txt
+python db/init_sqlite.py "$PWD/bupa.db"          # build seeded SQLite DB
+USE_VERTEX=false DATABASE_URL="sqlite:///$PWD/bupa.db" \
+  python -m uvicorn main:app --host 127.0.0.1 --port 8123
+# in another shell:
+cd web && python -m http.server 8124 --bind 127.0.0.1
+```
+Open http://127.0.0.1:8124/ (set `web/config.js` → `API_BASE: "http://127.0.0.1:8123"`,
+`MOCK: false`). Prefer to demo the UI alone with no backend? Set `MOCK: true`.
+
+> Ports 8123/8124 are used above because 8080/8000 are often reserved/in-use on
+> Windows; any free port works.
 
 ### 1. Database (Cloud SQL / AlloyDB, or local Postgres)
 ```bash
@@ -115,7 +141,8 @@ bash infra/deploy.sh          # Cloud Run + Storage + Pub/Sub + Scheduler
    transparency fields and guarded phrasing.
 3. **Assistant page** → a proactive reminder is in the Reminders panel; the impact
    counters show non-zero. Tap a recommendation's **next-step button** → the
-   "actioned" counter ticks up live (§16). Toggle **Senior Mode** to show the tier.
+   "actioned" counter ticks up live (§16). Tap a **🔊** to hear any item read aloud,
+   or use the **🎤** mic to dictate a question (it auto-sends when you stop talking).
 4. **Existing user** (pick Margaret/Priya) → ask about claims/policies; show the
    overdue-assessment recommendation and the redundant-policy alert. On a new
    check-in, the **"Select from your Bupa records"** option pre-fills the form
@@ -131,16 +158,26 @@ curl -X POST localhost:8080/chat -H 'Content-Type: application/json' \
 # mark a recommendation actioned -> the live impact counter moves (§16)
 curl -X POST localhost:8080/recommendations/99990003-0000-0000-0000-000000000003/action
 curl -X POST localhost:8080/internal/trigger-check
+curl localhost:8080/health/vertex     # is Gemini/MedGemma reachable? (needs USE_VERTEX+creds)
 ```
 
 ---
 
-## Accessibility (spec §18)
+## Accessibility & voice
 
-Two-tier typography: an accessible **Adult baseline** (18px body, 1.5 line-height,
-≥4.5:1 contrast, 44px targets) and a **Senior tier** (22px, 1.65, ≥7:1, 52px) toggled
-by one `html.senior` class — auto-offered when survey `age ≥ 65`. Font: **Atkinson
-Hyperlegible** (OFL), self-hosted in `web/styles/fonts/` — no runtime CDN call.
+- **Font**: **Inter** (OFL), self-hosted in `web/styles/fonts/` (single variable
+  woff2) — no runtime CDN call. Same typeface and size in every mode.
+- **Theme**: clean white background with soft blue accents; navy text (~14:1 contrast).
+- **Voice output (listen)**: a per-item **🔊** button on every bot message,
+  recommendation card, reminder, and survey result — click to hear just that item
+  read aloud (browser speech synthesis, `voice.js`). On-demand; nothing auto-reads.
+- **Voice input (speak)**: a **🎤** mic on the chat box (auto-sends after dictation)
+  and on the survey's open-text fields (chief complaint, better/worse, notes, …),
+  using the browser's Speech Recognition. Both degrade gracefully if unsupported.
+- **Senior Mode** (`html.senior`, auto-applied when survey `age ≥ 65`): larger tap
+  targets (52px), calmer spacing, flat/minimalist styling. It intentionally does
+  **not** change the font size — text stays consistent across modes.
+- Tokens in `web/styles/tokens.css`; senior overrides in `senior-mode.css`.
 
 ## Tests
 ```bash
