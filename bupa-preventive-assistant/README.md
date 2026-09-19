@@ -56,6 +56,22 @@ infra/          scheduler-job.yaml + deploy.sh
 
 ---
 
+## Configuration (do this first)
+
+Real config files are **git-ignored** — copy the committed `*.example` templates
+and edit them (they never get committed, so no secrets/URLs leak to git):
+
+```bash
+cp .env.example .env                       # API env vars (api/config.py reads these)
+cp web/config.example.js web/config.js     # front-end API_BASE + MOCK flag
+```
+- `.env` — `DATABASE_URL`, `USE_VERTEX`, `GCP_PROJECT`, `MEDGEMMA_ENDPOINT`, … (see the file).
+- `web/config.js` — set `API_BASE`; leave `MOCK: true` to run the UI with no backend, or
+  `false` to hit the real API.
+
+Ignored by git: `.env`, `web/config.js`, `*.db` (local SQLite), and any GCP key
+(`*-key.json`, `credentials.json`, `*.pem`). Committed: the `*.example` templates.
+
 ## Quick start
 
 ### 1. Database (Cloud SQL / AlloyDB, or local Postgres)

@@ -1,10 +1,40 @@
+# --- Python ---------------------------------------------------------------
 __pycache__/
 *.pyc
-.env
 .venv/
 venv/
 *.log
+
+# --- Config & secrets (NEVER commit — copy the *.example templates instead) -
+.env
+.env.*
+web/config.js
+*.local
+
+# GCP / credentials — never commit service-account keys or tokens
+*-key.json
+service-account*.json
+credentials.json
+application_default_credentials.json
+*.pem
+*.key
+
+# Endpoint / project detail dumps kept next to the repo
+*details*.txt
+
+# --- Local data -----------------------------------------------------------
+# Local SQLite demo DB (rebuild with api/db/init_sqlite.py)
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Tooling --------------------------------------------------------------
 .firebase/
 node_modules/
-# NB: DO commit web/styles/fonts/*.woff2 (Atkinson Hyperlegible, OFL) — they are
-# self-hosted and must ship with the front end (spec §18.1).
+
+# --- Keep example templates & self-hosted assets tracked ------------------
+!.env.example
+!web/config.example.js
+# DO commit web/styles/fonts/*.woff2 (Inter/Atkinson, OFL) — self-hosted,
+# must ship with the front end (see web/styles/fonts/README.md).
+!web/styles/fonts/*.woff2
